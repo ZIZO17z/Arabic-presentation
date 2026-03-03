@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قراءات متحررة متقدمة: فلسفة اللغة والإدراك</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* 1. SETUP & RTL OVERRIDES */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            min-height: 100vh;
+            padding: 40px 20px;
+            direction: rtl;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        /* 2. SLIDE CONTAINER STYLING */
+        .slide-container {
+            align-items: center;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 60px;
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            /* Increased max-width */
+            min-height: 700px;
+            /* Allow content to determine height, but keep a minimum */
+            overflow: hidden;
+        }
+
+        /* Decorative Elements */
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background-color: #8b5cf6;
+            /* Purple accent */
+            border-radius: 50%;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .slide-container::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: -150px;
+            width: 450px;
+            height: 450px;
+            background-color: #0f172a;
+            /* Slate dark accent */
+            border-radius: 50%;
+            opacity: 0.03;
+            z-index: 0;
+        }
+
+        .slide-container>* {
+            z-index: 1;
+        }
+
+        /* Dark Theme - mostly for passages */
+        .slide-container.dark-theme {
+            background: #0f172a;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 3. TYPOGRAPHY - ENLARGED */
+        .slide-container h1,
+        .slide-container h2,
+        .slide-container h3 {
+            font-family: 'Tajawal', sans-serif;
+            margin-bottom: 30px;
+        }
+
+        .slide-container h1 {
+            color: #0f172a;
+            font-size: 80px;
+            /* Larger title */
+            font-weight: 800;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .slide-container .slide-title {
+            color: #8b5cf6;
+            font-size: 48px;
+            /* Larger subtitle/slide title */
+            font-weight: 700;
+            text-align: right;
+            width: 100%;
+            border-bottom: 3px solid rgba(139, 92, 246, 0.2);
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+        }
+
+        .slide-container .slide-title.dark-text {
+            color: #1e293b;
+            border-color: rgba(30, 41, 59, 0.1);
+        }
+
+        .question-text {
+            font-size: 40px;
+            /* Much larger question text */
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 40px;
+            line-height: 1.5;
+            width: 100%;
+        }
+
+        /* 4. PASSAGE LAYOUT */
+        .passage-box {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 50px;
+            width: 100%;
+            border-right: 8px solid #8b5cf6;
+        }
+
+        .passage-box p {
+            color: #e2e8f0;
+            font-size: 30px;
+            /* Larger passage text */
+            line-height: 2;
+            text-align: justify;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .passage-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 5. INTERACTIVE QUIZ LIST */
+        .content-area {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bullet-list {
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .bullet-list ul {
+            list-style: none;
+        }
+
+        .bullet-list li {
+            background-color: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            padding: 30px 80px 30px 30px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+            display: block;
+            border: 3px solid #e2e8f0;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            font-size: 32px;
+            /* Larger options */
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .bullet-list li:hover {
+            border-color: #94a3b8;
+            transform: translateX(-5px);
+            /* Slide effect for RTL */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .bullet-list i {
+            color: #94a3b8;
+            font-size: 34px;
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Answer States */
+        .bullet-list li.correct {
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+            border-color: #059669 !important;
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .bullet-list li.correct i {
+            color: #ffffff !important;
+        }
+
+        .bullet-list li.wrong {
+            background-color: #ef4444 !important;
+            color: #ffffff !important;
+            border-color: #b91c1c !important;
+            animation: shake 0.4s;
+        }
+
+        .bullet-list li.wrong i {
+            color: #ffffff !important;
+        }
+
+        .bullet-list ul.answered li {
+            pointer-events: none;
+        }
+
+        .bullet-list ul.answered li:not(.correct):not(.wrong) {
+            opacity: 0.4;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            50% {
+                transform: translateX(10px);
+            }
+
+            75% {
+                transform: translateX(-10px);
+            }
+        }
+
+        /* 6. SPECIAL SLIDES */
+        .full-bg-image {
+            background-position: center;
+            background-size: cover;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .full-bg-image h1,
+        .full-bg-image p {
+            color: #ffffff;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .full-bg-image .subtitle {
+            font-size: 36px;
+            color: #c4b5fd;
+            margin-top: 20px;
+        }
+
+        /* Answer Key */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .answer-key-box {
+            background-color: #f8fafc;
+            border-radius: 16px;
+            padding: 40px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .answer-key-box h3 {
+            color: #0f172a;
+            font-size: 36px;
+            border-bottom: 3px solid #cbd5e1;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .answer-key-box ol {
+            padding-right: 30px;
+            font-size: 26px;
+            color: #334155;
+            line-height: 2;
+        }
+
+        .qa-layout h2 {
+            font-size: 70px;
+            color: #10b981;
+            text-align: center;
+        }
+
+        .qa-layout p {
+            font-size: 40px;
+            color: #cbd5e1;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slide 1: Title -->
+    <div class="slide-container full-bg-image" id="slide1"
+        style="background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+        <div>
+            <h1>قراءات متحررة متقدمة</h1>
+            <p class="subtitle">فلسفة اللغة، الإدراك، وتحليل الخطاب</p>
+            <p style="font-size: 24px; color: #94a3b8; margin-top: 30px;">20 سؤالاً تقييمياً للمهارات العليا</p>
+        </div>
+    </div>
+
+    <!-- Slide 2: Passage 1 -->
+    <div class="slide-container dark-theme" id="slide2">
+        <h2 class="slide-title">النص الأول: حتمية اللغة في تشكيل الوعي</h2>
+        <div class="passage-box">
+            <p>يَذْهَبُ عُلَمَاءُ اللِّسَانِيَّاتِ الإِدْرَاكِيَّةِ، وَعَلَى رَأْسِهِمْ "سَابِير" وَ"وُورْف"، إِلَى أَنَّ اللُّغَةَ لَيْسَتْ مُجَرَّدَ وِعَاءٍ مُحَايِدٍ تُسْكَبُ فِيهِ الأَفْكَارُ بَعْدَ تَشَكُّلِهَا، بَلْ هِيَ القَالِبُ الحَتْمِيُّ الَّذِي يُصَوِّغُ تِلْكَ الأَفْكَارَ وَيُهَنْدِسُ طَرِيقَةَ رُؤْيَتِنَا لِلْعَالَمِ. فَكُلُّ نَسَقٍ لُغَوِيٍّ يَفْرِضُ عَلَى النَّاطِقِينَ بِهِ شَبَكَةً مَفَاهِيمِيَّةً خَاصَّةً، تُؤَطِّرُ فَهْمَهُمْ لِلزَّمَانِ، وَالمَكَانِ، وَسَبَبِيَّةِ الأَحْدَاثِ.</p>
+            <p>وَعَلَى الرَّغْمِ مِنْ أَنَّ النَّظَرِيَّةَ فِي صُورَتِهَا الرَّادِيكَالِيَّةِ (الحَتْمِيَّةِ اللُّغَوِيَّةِ الصَّارِمَةِ) قَدْ وَاجَهَتْ انْتِقَادَاتٍ لَاذِعَةً بِحُجَّةِ أَنَّ الفِكْرَ قَدْ يَسْبِقُ التَّلَفُّظَ، إِلَّا أَنَّ النُّسْخَةَ المُخَفَّفَةَ مِنْهَا، وَالمَعْرُوفَةَ بِـ (النِّسْبِيَّةِ اللُّغَوِيَّةِ)، لَا تَزَالُ تَحْظَى بِوِجَاهَةٍ مَعْرِفِيَّةٍ بَالِغَةٍ. فَهِيَ تُؤَكِّدُ أَنَّ بِنْيَةَ لُغَتِنَا الأُمِّ تُوَجِّهُ انْتِبَاهَنَا المَعْرِفِيَّ نَحْوَ عَنَاصِرَ دُونَ أُخْرَى فِي التَّجْرِبَةِ الإِنْسَانِيَّةِ.</p>
+            <p>إِنَّ هَذَا الإِدْرَاكَ لِطَبِيعَةِ اللُّغَةِ يُحَتِّمُ عَلَيْنَا النَّظَرَ إِلَى التَّرْجَمَةِ لَيْسَ كَعَمَلِيَّةِ اسْتِبْدَالٍ مِيكَانِيكِيٍّ لِلأَلْفَاظِ، بَلْ كَمُفَاوَضَةٍ عَسِيرَةٍ بَيْنَ رُؤْيَتَيْنِ مُتَبَايِنَتَيْنِ لِلْوُجُودِ. كَمَا يُنَبِّهُنَا إِلَى خُطُورَةِ "الِاغْتِرَابِ اللُّغَوِيِّ"؛ حَيْثُ يُؤَدِّي تَهْمِيشُ اللُّغَةِ الأُمِّ إِلَى تَصَدُّعٍ فِي الهُوِيَّةِ الثَّقَافِيَّةِ وَارْتِبَاكٍ فِي المُنْطَلَقَاتِ الفِكْرِيَّةِ لِلْمُجْتَمَعَاتِ.</p>
+        </div>
+    </div>
+
+    <!-- Questions 1-10 for Passage 1 -->
+    <div class="slide-container" id="slide3">
+        <h2 class="slide-title dark-text">النص الأول - السؤال 1</h2>
+        <div class="content-area">
+            <p class="question-text">الفكرة الرئيسة التي يدور حولها النص هي:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) صعوبة الترجمة بين اللغات المختلفة.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> B) الدفاع عن النظرية الراديكالية لسابير ووورف.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> C) دور اللغة الجوهري في صياغة الفكر والإدراك الإنساني.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) أهمية الحفاظ على الهوية الثقافية من الاندثار.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide4">
+        <h2 class="slide-title dark-text">النص الأول - السؤال 2</h2>
+        <div class="content-area">
+            <p class="question-text">يُفهم من الفقرة الأولى أن علاقة اللغة بالفكر هي علاقة:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> A) تأطير وتشكيل سَبَقِيّ.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> B) احتواء محايد للأفكار الجاهزة.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) انفصال تام بين الدال والمدلول.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) تبعية مطلقة من اللغة للفكر.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide5">
+        <h2 class="slide-title dark-text">النص الأول - السؤال 3</h2>
+        <div class="content-area">
+            <p class="question-text">ما المقصود بمصطلح "النسبية اللغوية" كما ورد في الفقرة الثانية؟</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) عجز اللغات عن التعبير عن الحقائق العلمية.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> B) توجيه اللغة لانتباه الناطقين بها نحو جوانب محددة من التجربة.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) السيطرة المطلقة للغة على كل شاردة وواردة في الفكر.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) مساواة جميع اللغات في قدرتها التعبيرية.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide6">
+        <h2 class="slide-title dark-text">النص الأول - السؤال 4</h2>
+        <div class="content-area">
+            <p class="question-text">علاقة جملة "بحجة أن الفكر قد يسبق التلفظ" بما قبلها في الفقرة الثانية:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) نتيجة.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> B) تعليل.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) تفصيل.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) استدراك.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide7">
+        <h2 class="slide-title dark-text">النص الأول - السؤال 5</h2>
+        <div class="content-area">
+            <p class="question-text">مرادف كلمة "مُتَبَايِنَتَيْنِ" في سياق الفقرة الثالثة:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) مُتَقَارِبَتَيْنِ.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> B) مُتَوَازِيَتَيْنِ.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> C) مُخْتَلِفَتَيْنِ جَذْرِيًّا.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) مُتَشَابِهَتَيْنِ ظَاهِرِيًّا.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide8">
+        <h2 class="slide-title dark-text">النص الأول - السؤال 6</h2>
+        <div class="content-area">
+            <p class="question-text">التشبيه الضمني في قول الكاتب عن الترجمة "كمفاوضة عسيرة" يوحي بـ:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) الجانب المادي والمكسب في مهنة الترجمة.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> B) المشقة في التوفيق بين أنساق ثقافية وإدراكية مختلفة.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) استحالة نقل المعنى بين اللغات.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) ضرورة الاعتماد على الآلة في الترجمة.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide9">
+        <h2 class="slide-title dark-text">النص الأول - السؤال 7</h2>
+        <div class="content-area">
+            <p class="question-text">من وجهة نظر الكاتب، "الاغتراب اللغوي" يؤدي مباشرة إلى:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) الانفتاح على الثقافات العالمية.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> B) خلل في البنية الثقافية والمنطلقات الفكرية.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) تطوير اللغة الأم وتحديث مفرداتها.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) تقوية مهارات الترجمة لدى الأفراد.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide10">
+        <h2 class="slide-title dark-text">النص الأول - السؤال 8</h2>
+        <div class="content-area">
+            <p class="question-text">نبرة الكاتب في النص تتسم بـ:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> A) التقريرية التحليلية ذات الطابع الأكاديمي.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> B) الانفعالية العاطفية في الدفاع عن اللغة الأم.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) السخرية من النظريات اللغوية القديمة.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) التردد والشك في النتائج المطروحة.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide11">
+        <h2 class="slide-title dark-text">النص الأول - السؤال 9</h2>
+        <div class="content-area">
+            <p class="question-text">الخيال في قوله "تُهَنْدِسُ طَرِيقَةَ رُؤْيَتِنَا لِلْعَالَمِ" يُعد:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) تشبيهاً بليغاً.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> B) استعارة مكنية.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) مجازاً مرسلاً.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) كناية عن صفة.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide12">
+        <h2 class="slide-title dark-text">النص الأول - السؤال 10</h2>
+        <div class="content-area">
+            <p class="question-text">الكلمة التي تُمثل نقيضاً دلالياً لـ "مُحَايِدٍ" في الفقرة الأولى هي:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) مُسْتَقِل.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> B) مُنْحَاز / مُوَجِّه.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) مُتَذَبْذِب.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) مُتَوَازِن.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Passage 2 -->
+    <div class="slide-container dark-theme" id="slide13">
+        <h2 class="slide-title">النص الثاني: سيكولوجية الجماهير ووهم العقلانية</h2>
+        <div class="passage-box">
+            <p>يُقَرِّرُ "غُوسْتَاف لُوبُون" فِي تَحْلِيلِهِ لِسِيكُولُوجِيَّةِ الجَمَاهِيرِ أَنَّ الفَرْدَ حِينَمَا يَنْخَرِطُ فِي حَشْدٍ مَا، فَإِنَّهُ يَخْضَعُ لِتَحَوُّلٍ نَفْسِيٍّ عَمِيقٍ؛ إِذْ تَتَلَاشَى شَخْصِيَّتُهُ الوَاعِيَةُ، وَتَذُوبُ قُدْرَتُهُ عَلَى التَّمْيِيزِ النَّقْدِيِّ، لِيَحِلَّ مَحَلَّهَا عَقْلٌ جَمَاعِيٌّ بَدَائِيٌّ تَحْكُمُهُ العَاطِفَةُ والانْفِعَالُ. فِي هَذِهِ الحَالَةِ، تَتَرَاجَعُ المِحَجَّةُ المَنْطِقِيَّةُ لِصَالِحِ الصُّوَرِ الذِّهْنِيَّةِ المُبَسَّطَةِ وَالشِّعَارَاتِ الرَّنَّانَةِ.</p>
+            <p>إِنَّ الخَطَرَ الحَقِيقِيَّ لِلْحُشُودِ لَا يَكْمُنُ فِي افْتِقَارِهَا إِلَى الذَّكَاءِ الفَرْدِيِّ لِأَعْضَائِهَا - فَقَدْ يَضُمُّ الحَشْدُ نُخْبَةً مِنَ المُفَكِّرِينَ - بَلْ فِي سُرْعَةِ التَّعْدِيَةِ (العَدْوَى) النَّفْسِيَّةِ، وَقَابِلِيَّةِ الإِيحَاءِ. فَالجُمْهُورُ كَيَانٌ مُنْدَفِعٌ، يَتَأَرْجَحُ بِسُهُولَةٍ بَيْنَ التَّقْدِيسِ الأَعْمَى لِلزَّعِيمِ، وَالتَّدْمِيرِ الهَمَجِيِّ لِمَنْ يُعَارِضُهُ، دُونَ مِسَاحَةٍ رَمَادِيَّةٍ لِلْحِوَارِ.</p>
+            <p>وَمِنْ هُنَا، يُدْرِكُ صَانِعُو الدِّعَايَةِ السِّيَاسِيَّةِ أَنَّ مُخَاطَبَةَ الجَمَاهِيرِ لَا تَتِمُّ بِالاسْتِدْلَالِ المَنْطِقِيِّ المُعَقَّدِ، بَلْ بِالاعْتِمَادِ عَلَى التَّوْكِيدِ المُطْلَقِ، وَالتَّكْرَارِ المُسْتَمِرِّ، وَتَقْدِيمِ وُعُودٍ خَيَالِيَّةٍ تُدَاعِبُ رَغَبَاتِهِمْ الدَّفِينَةَ. لِذَلِكَ، غَالِبًا مَا تَنْسَاقُ الجَمَاهِيرُ وَرَاءَ القَادَةِ الَّذِينَ يَمْتَلِكُونَ سِحْرَ الكَلِمَةِ وَ"الكَارِيزْمَا"، حَتَّى وَإِنْ كَانَتْ طُرُوحَاتُهُمْ مُتَهَافِتَةً عَقْلَانِيًّا.</p>
+        </div>
+    </div>
+
+    <!-- Questions 11-20 for Passage 2 -->
+    <div class="slide-container" id="slide14">
+        <h2 class="slide-title dark-text">النص الثاني - السؤال 11</h2>
+        <div class="content-area">
+            <p class="question-text">ما التحول الأساسي الذي يطرأ على الفرد عند انخراطه في الحشد حسب الفقرة الأولى؟</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) ارتقاء مستوى تفكيره المنطقي.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> B) زيادة شعوره بالمسؤولية الفردية.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> C) فقدان الوعي النقدي وسيادة الانفعال العاطفي.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) الانعزال النفسي عن المحيطين به.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide15">
+        <h2 class="slide-title dark-text">النص الثاني - السؤال 12</h2>
+        <div class="content-area">
+            <p class="question-text">علاقة عبارة "لِيَحِلَّ مَحَلَّهَا عَقْلٌ جَمَاعِيٌّ بَدَائِيٌّ" بما قبلها "تَتَلَاشَى شَخْصِيَّتُهُ الوَاعِيَةُ":</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> A) نتيجة ومآل.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> B) تعليل وتفسير.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) تضاد ومقابلة.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) تفصيل بعد إجمال.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide16">
+        <h2 class="slide-title dark-text">النص الثاني - السؤال 13</h2>
+        <div class="content-area">
+            <p class="question-text">وفقاً للفقرة الثانية، المشكلة في الحشود ليست ضعف ذكاء أفرادها بل:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) اختلاف مستوياتهم التعليمية.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> B) خضوعهم لعدوى الإيحاء النفسي الجماعي.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) رغبتهم المتعمدة في التخريب.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) افتقارهم إلى قائد يوجههم.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide17">
+        <h2 class="slide-title dark-text">النص الثاني - السؤال 14</h2>
+        <div class="content-area">
+            <p class="question-text">معنى كلمة "مُتَهَافِتَةً" في سياق الجملة الأخيرة: "حَتَّى وَإِنْ كَانَتْ طُرُوحَاتُهُمْ مُتَهَافِتَةً عَقْلَانِيًّا":</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) مُتَسَارِعَةً.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> B) مُتَشَابِهَةً.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> C) ضَعِيفَةً وَمُتَنَاقِضَةً لَا تَثْبُتُ لِلنَّقْدِ.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) قَوِيَّةً وَمُؤَثِّرَةً.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide18">
+        <h2 class="slide-title dark-text">النص الثاني - السؤال 15</h2>
+        <div class="content-area">
+            <p class="question-text">الأسلوب الأمثل لمخاطبة الجماهير - كما يرى صانعو الدعاية في النص - يعتمد على:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) الحجج الفلسفية والبراهين المنطقية.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> B) الجزم وتكرار الشعارات التي تخاطب العاطفة.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) عرض الإحصائيات والأرقام الدقيقة.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) فتح باب الحوار والمناقشة الحرة.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide19">
+        <h2 class="slide-title dark-text">النص الثاني - السؤال 16</h2>
+        <div class="content-area">
+            <p class="question-text">المقصود بـ "دُونَ مِسَاحَةٍ رَمَادِيَّةٍ" في الفقرة الثانية:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) وضوح الرؤية المستقبلية.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> B) انعدام الأمل.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> C) التطرف في المواقف وغياب الاعتدال والوسطية.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) اختلاط الحق بالباطل.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide20">
+        <h2 class="slide-title dark-text">النص الثاني - السؤال 17</h2>
+        <div class="content-area">
+            <p class="question-text">أي المقولات التالية تتوافق تماماً مع فكرة النص؟</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) "رأي الجماعة لا يشقى البلاد به".</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> B) "إن الأفراد العباقرة قد يتحولون إلى قطيع أبله داخل الحشد".</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) "الحقيقة تكمن دائماً في رأي الأغلبية".</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) "العقل البشري يزداد نضجاً بالاجتماع".</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide21">
+        <h2 class="slide-title dark-text">النص الثاني - السؤال 18</h2>
+        <div class="content-area">
+            <p class="question-text">في قول الكاتب: "تُدَاعِبُ رَغَبَاتِهِمْ الدَّفِينَةَ" صورة بيانية نوعها:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> A) استعارة مكنية.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> B) تشبيه مفصل.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) استعارة تصريحية.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) مجاز مرسل.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide22">
+        <h2 class="slide-title dark-text">النص الثاني - السؤال 19</h2>
+        <div class="content-area">
+            <p class="question-text">مصطلح "المِحَجَّةُ المَنْطِقِيَّةُ" في الفقرة الأولى يشير إلى:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) الطريق الواسع.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> B) الدليل والبرهان العقلي.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> C) العاطفة الجياشة.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) الجدال العقيم.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide23">
+        <h2 class="slide-title dark-text">النص الثاني - السؤال 20</h2>
+        <div class="content-area">
+            <p class="question-text">الهدف الضمني للمؤلف من هذا النص هو:</p>
+            <div class="bullet-list">
+                <ul>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> A) دعوة الناس للانعزال التام عن المجتمع.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> B) تعليم السياسيين كيفية خداع الجماهير.</li>
+                    <li data-correct="true"><i class="fa-regular fa-circle"></i> C) التحذير من الانقياد الأعمى خلف الحشود ودعاة الشعبوية.</li>
+                    <li data-correct="false"><i class="fa-regular fa-circle"></i> D) إثبات أن الجماهير دائمًا على حق.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 24: Answer Key Slide -->
+    <div class="slide-container" id="slide24">
+        <h2 class="slide-title dark-text" style="text-align: center;">دليل الإجابات النموذجية</h2>
+        <div class="content-area" style="justify-content: center;">
+            <div class="two-column">
+                <div class="answer-key-box">
+                    <h3>إجابات النص الأول</h3>
+                    <ol>
+                        <li>C) دور اللغة الجوهري في صياغة الفكر</li>
+                        <li>A) تأطير وتشكيل سَبَقِيّ</li>
+                        <li>B) توجيه الانتباه نحو جوانب محددة</li>
+                        <li>B) تعليل</li>
+                        <li>C) مُخْتَلِفَتَيْنِ جَذْرِيًّا</li>
+                        <li>B) المشقة في التوفيق بين أنساق مختلفة</li>
+                        <li>B) خلل في البنية الثقافية والمنطلقات</li>
+                        <li>A) التقريرية التحليلية الأكاديمية</li>
+                        <li>B) استعارة مكنية</li>
+                        <li>B) مُنْحَاز / مُوَجِّه</li>
+                    </ol>
+                </div>
+                <div class="answer-key-box">
+                    <h3>إجابات النص الثاني</h3>
+                    <ol>
+                        <li>C) فقدان الوعي النقدي وسيادة الانفعال</li>
+                        <li>A) نتيجة ومآل</li>
+                        <li>B) عدوى الإيحاء النفسي الجماعي</li>
+                        <li>C) ضَعِيفَةً لَا تَثْبُتُ لِلنَّقْدِ</li>
+                        <li>B) الجزم وتكرار الشعارات</li>
+                        <li>C) التطرف وغياب الاعتدال</li>
+                        <li>B) "الأفراد العباقرة قد يتحولون لقطيع"</li>
+                        <li>A) استعارة مكنية</li>
+                        <li>B) الدليل والبرهان العقلي</li>
+                        <li>C) التحذير من الانقياد الأعمى للحشود</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 25: Q&A Layout -->
+    <div class="slide-container dark-theme" id="slide25">
+        <div class="qa-layout">
+            <h2>نهاية الاختبار المتقدم</h2>
+            <p>كيف كان أداؤكم في التحليل والاستنتاج؟</p>
+            <p style="font-size: 28px; color: #94a3b8; margin-top: 40px; line-height: 1.6;">
+                النصوص العميقة تتطلب قراءة متأنية لما بين السطور.<br>
+                يمكنكم العودة للنصوص في أي وقت لمراجعة مفرداتها وتحليلها.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const options = document.querySelectorAll('.bullet-list li');
+
+            options.forEach(option => {
+                option.addEventListener('click', function () {
+                    const parentUl = this.closest('ul');
+
+                    if (parentUl.classList.contains('answered')) return;
+                    parentUl.classList.add('answered');
+
+                    const isCorrect = this.getAttribute('data-correct') === 'true';
+
+                    if (isCorrect) {
+                        this.classList.add('correct');
+                        this.querySelector('i').className = 'fa-solid fa-circle-check';
+                        triggerConfetti(this);
+                    } else {
+                        this.classList.add('wrong');
+                        this.querySelector('i').className = 'fa-solid fa-circle-xmark';
+
+                        const correctOption = parentUl.querySelector('li[data-correct="true"]');
+                        if (correctOption) {
+                            correctOption.classList.add('correct');
+                            correctOption.querySelector('i').className = 'fa-solid fa-circle-check';
+                        }
+                    }
+                });
+            });
+
+            function triggerConfetti(element) {
+                const rect = element.getBoundingClientRect();
+                const x = (rect.left + rect.width / 2) / window.innerWidth;
+                const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+                confetti({
+                    particleCount: 150,
+                    spread: 90,
+                    origin: { x: x, y: y },
+                    colors: ['#8b5cf6', '#10b981', '#ffffff', '#0f172a']
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
