@@ -321,6 +321,54 @@
             text-align: center;
             margin-top: 20px;
         }
+        /* Responsive rules: fluid typography and layout adjustments */
+        /* Use clamp() and breakpoints to make slides look good across devices */
+        @media (max-width: 1400px) {
+            .slide-container { padding: 48px; }
+            .slide-container h1 { font-size: clamp(48px, 6.2vw, 72px); }
+            .slide-container .slide-title { font-size: clamp(30px, 3.6vw, 44px); }
+            .question-text { font-size: clamp(28px, 3.8vw, 40px); }
+            .passage-box p { font-size: clamp(20px, 2.6vw, 30px); line-height: 1.9; }
+            .bullet-list li { font-size: clamp(20px, 2.8vw, 32px); padding: 24px 64px 24px 24px; }
+            .bullet-list i { font-size: clamp(20px, 2.8vw, 34px); }
+        }
+
+        @media (max-width: 1024px) {
+            body { padding: 32px 18px; }
+            .slide-container { padding: 36px; max-width: 1000px; min-height: 520px; }
+            .slide-container h1 { font-size: clamp(40px, 7.6vw, 60px); }
+            .slide-container .slide-title { font-size: clamp(26px, 4.2vw, 36px); text-align: right; }
+            .passage-box { padding: 28px; }
+            .two-column { gap: 24px; }
+        }
+
+        @media (max-width: 768px) {
+            .slide-container { padding: 28px; min-height: auto; }
+            .slide-container h1 { font-size: clamp(32px, 9.5vw, 48px); }
+            .slide-container .slide-title { font-size: clamp(22px, 5.8vw, 30px); }
+            .question-text { font-size: clamp(20px, 5.2vw, 28px); }
+            .passage-box p { font-size: clamp(18px, 3.8vw, 22px); line-height: 1.8; }
+            .bullet-list li { padding: 18px 56px 18px 18px; }
+            .bullet-list i { right: 18px; }
+            .two-column { grid-template-columns: 1fr; }
+            .answer-key-box { padding: 28px; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 18px 12px; gap: 24px; }
+            .slide-container { padding: 18px; border-radius: 12px; }
+            .slide-container h1 { font-size: clamp(24px, 12vw, 40px); }
+            .slide-container .slide-title { font-size: 18px; padding-bottom: 10px; margin-bottom: 18px; }
+            .question-text { font-size: 18px; margin-bottom: 20px; }
+            .passage-box { padding: 18px; border-right-width: 6px; }
+            .passage-box p { font-size: 16px; line-height: 1.6; }
+            .bullet-list { max-width: 100%; }
+            .bullet-list li { font-size: 16px; padding: 14px 48px 14px 14px; margin-bottom: 18px; }
+            .bullet-list i { right: 12px; font-size: 20px; }
+            .slide-container.full-bg-image { padding: 28px 18px; }
+            .answer-key-box h3 { font-size: 20px; }
+            .answer-key-box ol { font-size: 16px; }
+        }
     </style>
 </head>
 
